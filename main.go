@@ -17,7 +17,6 @@ var (
 	author         = flag.String("author", "", "author")
 	title          = flag.String("title", "", "document title")
 	writtenAt      = flag.String("at", "", "datetime, format: YYYY-mm-dd HH:MM:SS, default: now")
-	inFile         = flag.String("i", "", "input markdown file, default: stdin")
 	outFile        = flag.String("o", "", "output file, default: stdout")
 )
 
@@ -53,10 +52,11 @@ func main() {
 	}
 
 	var md []byte
-	if len(*inFile) == 0 {
+	args := flag.Args()
+	if len(args) == 0 {
 		md, err = ioutil.ReadAll(os.Stdin)
 	} else {
-		md, err = ioutil.ReadFile(*inFile)
+		md, err = ioutil.ReadFile(args[0])
 	}
 	if err != nil && err != io.EOF {
 		log.Fatal(err)

@@ -62,17 +62,25 @@ func main() {
 		log.Fatal(err)
 	}
 
-	err = tmpl.Execute(os.Stdout, Doc{
+	out := os.Stdout
+	if len(*outFile) != 0 {
+		out, err = os.OpenFile(*outFile, os.O_CREATE|os.O_WRONLY|os.O_TRUNC, 0644)
+		if err != nil {
+			log.Fatal(err)
+		}
+	}
+
+	if err = tmpl.Execute(out, Doc{
 		CSS:         *useEmbeddedCss,
 		MdContent:   string(md),
 		HtmlContent: string(blackfriday.MarkdownCommon(md)),
 		Datetime:    time.Now().Format("2006-01-02 15:04:05"),
 		Author:      *author,
 		Title:       *title,
-	})
-
-	if err != nil {
+	}); err != nil {
 		log.Fatal(err)
 	}
 
+	out.Sync()
+	out.Close()
 }

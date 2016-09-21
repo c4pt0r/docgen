@@ -38,9 +38,6 @@ func main() {
 	}
 
 	funcMap := template.FuncMap{
-		"attr": func(s string) template.HTMLAttr {
-			return template.HTMLAttr(s)
-		},
 		"safe": func(s string) template.HTML {
 			return template.HTML(s)
 		},
